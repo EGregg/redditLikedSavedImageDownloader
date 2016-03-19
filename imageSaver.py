@@ -1,6 +1,6 @@
 #import scrapy
 
-import urllib
+from urllib.request import urlretrieve
 import datetime
 import os
 
@@ -30,7 +30,7 @@ def getURLSFromFile(filename):
 
         else:
             nonRelevantURLs += 1
-    print 'Filtered ' + str(nonRelevantURLs) + ' URLs that didn\'t contain images'
+    print ('Filtered ' + str(nonRelevantURLs) + ' URLs that didn\'t contain images')
     return urls
 
 def _saveAllImagesToDir(urls, directory, soft_retrieve = True):
@@ -38,10 +38,10 @@ def _saveAllImagesToDir(urls, directory, soft_retrieve = True):
     imagesToSave = len(urls)
     for url in urls:
         if not soft_retrieve:
-            urllib.urlretrieve(url, directory + '/img' + str(count) + url[-4:])
+            urlretrieve(url, directory + '/img' + str(count) + url[-4:])
 
         count += 1
-        print '[' + str(int((float(count) / float(imagesToSave)) * 100)) + '%] ' + url + ' saved to "' + directory + '/img' + str(count) + url[-4:] + '"'
+        print ('[' + str(int((float(count) / float(imagesToSave)) * 100)) + '%] ' + url + ' saved to "' + directory + '/img' + str(count) + url[-4:] + '"')
 
 def _makeDirIfNonexistant(directory):
     if not os.path.exists(directory):
@@ -50,14 +50,18 @@ def _makeDirIfNonexistant(directory):
 #note that you must explicitly set soft_retrieve to False to actually get the images
 def saveAllImages(soft_retrieve_imgs=True):
     saved_urls = getURLSFromFile('savedURLS.txt')
-    liked_urls = getURLSFromFile('likedURLS.txt')
-    timestamp = datetime.datetime.now().strftime('%m-%d_%H-%-M-%S')
+    """Taking out the liked URLS
+    liked_urls = getURLSFromFile('likedURLS.txt')"""
+    timestamp = datetime.datetime.now().strftime('%m-%d_%H-%M-%S') #fixed regex
     count = 0
     savedDirectory = 'ImagesSaved__' + timestamp
-    likedDirectory = 'ImagesLiked__' + timestamp
+    """Taking out the liked URLS
+    likedDirectory = 'ImagesLiked__' + timestamp"""
 
     _makeDirIfNonexistant(savedDirectory)
-    _makeDirIfNonexistant(likedDirectory)
+    """Taking out the liked URLS
+    _makeDirIfNonexistant(likedDirectory)"""
 
     _saveAllImagesToDir(saved_urls, savedDirectory, soft_retrieve = soft_retrieve_imgs)
-    _saveAllImagesToDir(liked_urls, likedDirectory, soft_retrieve = soft_retrieve_imgs)
+    """Taking out the liked URLS
+    _saveAllImagesToDir(liked_urls, likedDirectory, soft_retrieve = soft_retrieve_imgs)"""
